@@ -215,19 +215,15 @@ Create a directory to setup Pi-Hole with Auto-Updating Blocklists:
 mkdir pihole
 ```
 
-Create the pihole-updatelists config file:
+Copy the pihole-updatelists config file to configure pihole-updatelists:
 ```bash
-sudo nano etc-pihole-updatelists/pihole-updatelists.conf
+sudo wget https://raw.githubusercontent.com/nilsstreedain/RPi-Docker-Server-Setup/main/pihole-updatelists.conf -O etc-pihole-updatelists/pihole-updatelists.conf
 ```
 
-Paste [this](pihole-updatelists.conf) to configure pihole-updatelists:
-
-Create the docker-compose file:
+Copy the docker-compose file to configure cloudflared, pi-hole, pihole-updatelists, and their respective networking:
 ```bash
-sudo nano pihole/docker-compose.yml
+sudo wget https://raw.githubusercontent.com/nilsstreedain/RPi-Docker-Server-Setup/main/docker-compose.yml -O docker-compose.yml
 ```
-
-Paste [this](docker-compose.yml) to configure cloudflared, pi-hole, pihole-updatelists, and their respective networking:
 
 Run docker-compose:
 ```bash
