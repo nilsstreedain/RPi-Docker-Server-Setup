@@ -212,17 +212,17 @@ sudo apt-get -y install docker-compose
 
 Create a directory to setup Pi-Hole with Auto-Updating Blocklists:
 ```bash
-mkdir pihole
+mkdir pihole pihole/etc-pihole-updatelists && cd pihole
 ```
 
 Copy the pihole-updatelists config file to configure pihole-updatelists:
 ```bash
-sudo wget https://raw.githubusercontent.com/nilsstreedain/RPi-Docker-Server-Setup/main/pihole-updatelists.conf -O etc-pihole-updatelists/pihole-updatelists.conf
+sudo wget https://raw.githubusercontent.com/nilsstreedain/RPi-Docker-Server-Setup/main/pihole/pihole-updatelists/pihole-updatelists.conf -O etc-pihole-updatelists/pihole-updatelists.conf
 ```
 
 Copy the docker-compose file to configure cloudflared, pi-hole, pihole-updatelists, and their respective networking:
 ```bash
-sudo wget https://raw.githubusercontent.com/nilsstreedain/RPi-Docker-Server-Setup/main/docker-compose.yml -O docker-compose.yml
+sudo wget https://raw.githubusercontent.com/nilsstreedain/RPi-Docker-Server-Setup/main/pihole/docker-compose.yml -O docker-compose.yml
 ```
 
 Run docker-compose:
