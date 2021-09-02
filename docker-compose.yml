@@ -1,0 +1,97 @@
+version: "3.0"
+
+# Composes multiple Docker containers to create a Pi-Hole server on a specified vlan using a DoH upstream server.
+services:
+  # Creates a Cloudflared container to use as the upstream DoH server for Pi-Hole
+  cloudflared:
+    container_name: cloudflared
+    hostname: cloudflared
+    # Builds a cloudflared container as they currently only exist for amd64 not arm
+    build: https://github.com/cloudflare/cloudflared.git
+    command: proxy-dns
+    environment:
+      TUNNEL_DNS_UPSTREAM: "https://1.1.1.2/dns-query"
+      TUNNEL_DNS_BOOTSTRAP: "https://1.0.0.2/dns-query"
+      TUNNEL_DNS_ADDRESS: "0.0.0.0"
+      TUNNEL_DNS_PORT: "53"
+    # The Cloudflare container cannot be initially setup without a DNS server
+    dns:
+      - "1.1.1.2"
+      - "1.0.0.2"
+    # Gives the cloudflare container an IP in the pihole_br network created below
+    networks:
+      br:
+        ipv4_address: 172.18.0.2
+    healthcheck:
+      test: ["CMD", "cloudflared", "version"]
+
+  # Creates a version of the Pi-Hole container created by @jacklul on GitHub
+  # This version adds auto updating black/whitelist functionality
+  pihole:
+    container_name: pihole
+    hostname: pihole
+    image: jacklul/pihole:latest
+    # Opens ports required by Pi-Hole
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "67:67/udp"
+      - "80:80/tcp"
+      - "443:443/tcp"
+    environment:
+      TZ: "America/Denver"
+      # IP of Pi-Hole
+      ServerIP: "10.2.16.4"
+      # Upstream DNS (Cloudflared)
+      PIHOLE_DNS_: "172.18.0.2"
+      DNSSEC: "true"
+      DNS_BOGUS_PRIV: "true"
+      DNS_FQDN_REQUIRED: "true"
+      # Enables Reverse DNS lookups to get device names from IP addresses
+      REV_SERVER: "true"
+      REV_SERVER_TARGET: "10.2.16.1"
+      REV_SERVER_CIDR: "10.2.16.0/24"
+      # The Pi-Hole container has two network interfaces, this tells
+      # Pi-Hole to use the second interface to look for DNS requests
+      # Adjust if the name of "br" is changed, altering the
+      # lexilogical order of network interfaces
+      INTERFACE: "eth1"
+    volumes:
+      - './etc-pihole/:/etc/pihole/'
+      - './etc-dnsmasq.d/:/etc/dnsmasq.d/'
+      - './etc-pihole-updatelists/:/etc/pihole-updatelists/'
+    dns:
+      - "172.18.0.2"
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    networks:
+      # Adds pihole_br network so Pi-Hole can comunicate with Cloudflared
+      br:
+        ipv4_address: 172.18.0.3
+      # Adds pihole_macvlan16 network so Pi-Hole can communicate with devices
+      # on the vlan configured for the network below.
+      macvlan16:
+        ipv4_address: 10.2.16.4
+    depends_on:
+      - cloudflared
+    healthcheck:
+      test: ["CMD", "dig", "+norecurse", "+retry=0", "@127.0.0.1", "pi.hole"]
+
+networks:
+  # Creates the pihole_br network so cloudflare and Pi-Hole can communicate with eachother
+  br:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.18.0.0/29
+  # Creates the pihole_macvlan16 interface so Pi-Hole can communicate with external devices
+  macvlan16:
+    driver: macvlan
+    driver_opts:
+      # Specifies the interface and vlan that this network uses
+      parent: eth0.16
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.2.16.0/24
