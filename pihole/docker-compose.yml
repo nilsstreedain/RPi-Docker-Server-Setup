@@ -83,6 +83,7 @@ services:
     restart: unless-stopped
     container_name: homebridge
     hostname: homebridge
+#     privileged: true
     image: oznu/homebridge:ubuntu
     environment:
       - PGID=1000
@@ -92,6 +93,7 @@ services:
       - TZ=America/Los_Angeles
     volumes:
       - ./volumes/homebridge:/homebridge
+#       - /dev/bus/usb:/dev/bus/usb
     networks:
       # Adds pihole_macvlan16 network so homebridge can communicate with devices
       # on the vlan configured for the network below.
