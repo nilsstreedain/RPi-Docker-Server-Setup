@@ -4,6 +4,7 @@ version: "3.0"
 services:
   # Creates a Cloudflared container to use as the upstream DoH server for Pi-Hole
   cloudflared:
+    restart: unless-stopped
     container_name: cloudflared
     hostname: cloudflared
     # Builds a cloudflared container as they currently only exist for amd64 not arm
@@ -28,6 +29,7 @@ services:
   # Creates a version of the Pi-Hole container created by @jacklul on GitHub
   # This version adds auto updating black/whitelist functionality
   pihole:
+    restart: unless-stopped
     container_name: pihole
     hostname: pihole
     image: jacklul/pihole:latest
