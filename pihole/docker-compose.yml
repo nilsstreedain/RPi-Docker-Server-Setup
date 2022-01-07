@@ -41,9 +41,9 @@ services:
       - "80:80/tcp"
       - "443:443/tcp"
     environment:
-      TZ: "America/Denver"
+      TZ: "America/Los_Angeles"
       # IP of Pi-Hole
-      ServerIP: "10.2.16.4"
+      ServerIP: "10.3.16.4"
       # Upstream DNS (Cloudflared)
       PIHOLE_DNS_: "172.18.0.2"
       DNSSEC: "true"
@@ -51,8 +51,8 @@ services:
       DNS_FQDN_REQUIRED: "true"
       # Enables Reverse DNS lookups to get device names from IP addresses
       REV_SERVER: "true"
-      REV_SERVER_TARGET: "10.2.16.1"
-      REV_SERVER_CIDR: "10.2.16.0/24"
+      REV_SERVER_TARGET: "10.3.16.1"
+      REV_SERVER_CIDR: "10.3.16.0/24"
       # The Pi-Hole container has two network interfaces, this tells
       # Pi-Hole to use the second interface to look for DNS requests
       # Adjust if the name of "br" is changed, altering the
@@ -66,7 +66,6 @@ services:
       - "172.18.0.2"
     cap_add:
       - NET_ADMIN
-    restart: unless-stopped
     networks:
       # Adds pihole_br network so Pi-Hole can comunicate with Cloudflared
       br:
@@ -74,11 +73,31 @@ services:
       # Adds pihole_macvlan16 network so Pi-Hole can communicate with devices
       # on the vlan configured for the network below.
       macvlan16:
-        ipv4_address: 10.2.16.4
+        ipv4_address: 10.3.16.4
     depends_on:
       - cloudflared
     healthcheck:
       test: ["CMD", "dig", "+norecurse", "+retry=0", "@127.0.0.1", "pi.hole"]
+      
+  homebridge:
+    restart: unless-stopped
+    container_name: homebridge
+    hostname: homebridge
+    image: oznu/homebridge:ubuntu
+    network_mode: host
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - HOMEBRIDGE_CONFIG_UI=1
+      - HOMEBRIDGE_CONFIG_UI_PORT=80
+      - TZ=America/Los_Angeles
+    volumes:
+      - ./volumes/homebridge:/homebridge
+    networks:
+      # Adds pihole_macvlan16 network so homebridge can communicate with devices
+      # on the vlan configured for the network below.
+      macvlan16:
+        ipv4_address: 10.3.16.3
 
 networks:
   # Creates the pihole_br network so cloudflare and Pi-Hole can communicate with eachother
@@ -96,4 +115,4 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 10.2.16.0/24
+        - subnet: 10.3.16.0/24
