@@ -84,7 +84,6 @@ services:
     container_name: homebridge
     hostname: homebridge
     image: oznu/homebridge:ubuntu
-    network_mode: host
     environment:
       - PGID=1000
       - PUID=1000
