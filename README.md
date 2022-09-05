@@ -2,7 +2,7 @@
 
 Before getting started:
 - Create a fresh install of Raspberry Pi OS with ssh enabled (add an empty file named ssh to the boot folder)
-- Connect the Raspberry Pi to your network (make sure to use a truck port and assign a static IP)
+- Connect the Raspberry Pi to your network (make sure to use a trunk port and assign a static IP)
 - ssh into the Pi
 
 ## Prepare Raspberry Pi
@@ -66,12 +66,12 @@ Login to root account
 ssh root@raspberrypi
 ```
 
-Change pi username (Replace nilsstreedain with the username you'd like to use)
+Change pi username (Replace nilsstreedain with the username you'd like to use):
 ```bash
 usermod -l nilsstreedain pi
 ```
 
-Change home directory name:
+Change home directory name (Replace nilsstreedain with the username you'd like to use):
 ```bash
 usermod -m -d /home/nilsstreedain nilsstreedain
 ```
@@ -97,7 +97,7 @@ Generate Public/Private Key Pair:
 ssh-keygen -b 4096
 ```
 
-Upload Public key from Mac to Linux:
+Upload Public key from Mac to Linux (Replace nilsstreedain with the username you'd like to use):
 ```bash
 scp ~/.ssh/id_rsa.pub nilsstreedain@raspberrypi:~/.ssh/authorized_keys
 ```
@@ -131,19 +131,19 @@ sudo systemctl restart sshd
 
 ## Setup Auto-Updtaes
 
-Install Unattanded Upgrades
+Install Unattanded Upgrades:
 ```bash
 sudo apt-get install unattended-upgrades
 ```
 
-Start Unattended Upgrades
+Start Unattended Upgrades:
 ```bash
 sudo dpkg-reconfigure --priority=low unattended-upgrades
 ```
 
 ## Setup Firewall
 
-Install Uncomplicated Firewall
+Install Uncomplicated Firewall:
 ```bash
 sudo apt install ufw
 ```
@@ -198,6 +198,7 @@ Install Docker:
 ```bash
 bash -c "$(curl -fsSL https://get.docker.com)"
 ```
+
 Test Docker:
 ```bash
 sudo docker run --rm hello-world
@@ -236,7 +237,7 @@ sudo docker exec -it pihole sudo pihole -a -p
 ```
 
 ### Updating Pi-Hole
-When you need to update Pi-Hole, ssh into the raspberry pi and navigate to ~/pihole
+When you need to update Pi-Hole, ssh into the raspberry pi and navigate to ~/pihole :
 ```bash
 cd ~/pihole
 ```
