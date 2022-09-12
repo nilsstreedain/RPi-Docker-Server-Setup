@@ -236,7 +236,7 @@ Set Pi-Hole password:
 sudo docker exec -it pihole sudo pihole -a -p
 ```
 
-### Updating Pi-Hole
+### Updating Pi-Hole and other Docker containers
 When you need to update Pi-Hole, ssh into the raspberry pi and navigate to ~/pihole :
 ```bash
 cd ~/pihole
@@ -253,7 +253,7 @@ sudo docker pull pihole/pihole && sudo docker pull jacklul/pihole
 ```
 -->
 
-Then re-run docker-compose to create and run the new updated container:
+Then re-run docker-compose to build and run the new updated containers:
 ```bash
-sudo docker-compose up -d --force-recreate
+sudo docker-compose up -d --force-recreate --build
 ```
