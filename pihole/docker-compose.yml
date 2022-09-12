@@ -7,8 +7,7 @@ services:
     restart: unless-stopped
     container_name: cloudflared
     hostname: cloudflared
-    # Builds a cloudflared container as they currently only exist for amd64 not arm
-    build: https://github.com/cloudflare/cloudflared.git
+    image: cloudflare/cloudflared:latest
     command: proxy-dns
     environment:
       TUNNEL_DNS_UPSTREAM: "https://1.1.1.2/dns-query"
