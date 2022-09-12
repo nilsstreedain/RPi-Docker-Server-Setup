@@ -255,5 +255,5 @@ sudo docker pull pihole/pihole && sudo docker pull jacklul/pihole
 
 Then re-run docker-compose to build and run the new updated containers:
 ```bash
-sudo docker-compose up -d --force-recreate --build
+sudo docker-compose up -d --force-recreate
 ```
