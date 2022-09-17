@@ -206,7 +206,7 @@ sudo docker run --rm hello-world
 
 Install Docker Compose:
 ```bash
-sudo apt-get -y install docker-compose
+sudo apt-get -y install docker-compose-plugin
 ```
 
 ## Setup Pi-Hole
@@ -228,7 +228,7 @@ sudo wget https://raw.githubusercontent.com/nilsstreedain/RPi-Docker-Server-Setu
 
 Run docker-compose:
 ```bash
-sudo docker-compose up -d
+sudo docker compose up -d
 ```
 
 Set Pi-Hole password:
@@ -242,12 +242,12 @@ When you need to update Pi-Hole, ssh into the raspberry pi and navigate to ~/pih
 cd ~/pihole
 ```
 
+<!--
 Pull the latest Pi-Hole docker updates:
 
 ```bash
-sudo docker pull jacklul/pihole
+sudo docker pull pihole/pihole
 ```
-<!--
 ```bash
 sudo docker pull pihole/pihole && sudo docker pull jacklul/pihole
 ```
@@ -255,5 +255,5 @@ sudo docker pull pihole/pihole && sudo docker pull jacklul/pihole
 
 Then re-run docker-compose to build and run the new updated containers:
 ```bash
-sudo docker-compose up -d --force-recreate
+sudo docker compose up -d --force-recreate --pull always
 ```
