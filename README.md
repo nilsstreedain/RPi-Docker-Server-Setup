@@ -242,12 +242,13 @@ When you need to update Pi-Hole, ssh into the raspberry pi and navigate to ~/pih
 cd ~/pihole
 ```
 
-<!--
 Pull the latest Pi-Hole docker updates:
 
 ```bash
-sudo docker pull pihole/pihole
+sudo docker pull jacklul/pihole
 ```
+
+<!--
 ```bash
 sudo docker pull pihole/pihole && sudo docker pull jacklul/pihole
 ```
@@ -255,5 +256,5 @@ sudo docker pull pihole/pihole && sudo docker pull jacklul/pihole
 
 Then re-run docker-compose to build and run the new updated containers:
 ```bash
-sudo docker compose up -d --force-recreate --pull always
+sudo docker compose up -d --force-recreate
 ```
